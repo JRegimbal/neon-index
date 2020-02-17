@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { getAllDocuments, createManifest, addEntry, deleteEntry } from './storage';
 import { pages } from './documents';
@@ -30,6 +30,16 @@ export class OptionsComponent implements OnInit {
   selectOrUpload: string = '';
   pageOrManuscript: string = '';
   pageOrManifest: string = '';
+
+  formGroup1 = new FormGroup({
+    selectOrUpload: new FormControl(this.selectOrUpload,
+      Validators.required)
+  });
+
+  formGroup2 = new FormGroup({
+    pageOrManuscript: new FormControl(this.pageOrManuscript,
+      Validators.required)
+  })
 
   pages: string[];
   pagesLength: number;

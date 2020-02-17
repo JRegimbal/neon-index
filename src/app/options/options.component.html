@@ -1,4 +1,42 @@
-<form [formGroup]="optionsForm" (ngSubmit)="handleSubmit()">
+<mat-vertical-stepper #stepper linear="true">
+    <mat-step [stepControl]="formGroup1" label="Select an Option">
+        <form [formGroup]="formGroup1">
+            <fieldset class="control field">
+                <label for="select" class="label">Select an Existing Document:&nbsp;
+                    <input type="radio" id="select" formControlName="selectOrUpload" value="select"/>
+                </label>
+                <label for="upload" class="label">Upload a New Document:&nbsp;
+                    <input type="radio" id="upload" formControlName="selectOrUpload" value="upload"/>
+                </label>
+            </fieldset>
+            <div>
+                <button mat-raised-button matStepperNext type="button">Next</button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="formGroup2" label="Page or Manuscript">
+        <form [formGroup]="formGroup2">
+            <fieldset class="control field">
+                <label for="page" class="label">
+                    Page&nbsp;
+                    <input type="radio" id="page" formControlName="pageOrManuscript" value="page"/>
+                </label>
+                <label for="manuscript" class="label">
+                    Manuscript&nbsp;
+                    <input type="radio" id="manuscript" formControlName="pageOrManuscript" value="manuscript"/>
+                </label>
+            </fieldset>
+        </form>
+        <div>
+            <button mat-raised-button matStepperPrevious type="button">Previous</button>
+            <button mat-raised-button matStepperNext type="button">Next</button>
+        </div>
+    </mat-step>
+    <mat-step label="Make Selection">
+    </mat-step>
+</mat-vertical-stepper>
+
+<!--<form [formGroup]="optionsForm" (ngSubmit)="handleSubmit()">
   <section>
     <fieldset class="control field">
       <legend class="legend">Choose an Option:&nbsp;</legend>
@@ -94,4 +132,4 @@
       <button [disabled]="!optionsForm.controls.manifestUpload.valid" class="button" type="submit">Submit</button>
     </div>
   </section>
-</form>
+</form>-->
