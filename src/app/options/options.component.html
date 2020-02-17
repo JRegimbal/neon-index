@@ -1,0 +1,97 @@
+<form [formGroup]="optionsForm" (ngSubmit)="handleSubmit()">
+  <section>
+    <fieldset class="control field">
+      <legend class="legend">Choose an Option:&nbsp;</legend>
+      <label for="select" class="label">Select a Document to Display&nbsp;
+        <input type="radio" id="select" formControlName="selectOrUpload" value="select"/>
+      </label>
+      <label for="upload" class="label">Upload a New Document&nbsp;
+        <input type="radio" id="upload" formControlName="selectOrUpload" value="upload"/>
+      </label>
+    </fieldset>
+  </section>
+
+  <section *ngIf="selectOrUpload === 'select'">
+    <fieldset class="control field">
+      <legend class="legend">Select a Page or a Manuscript?</legend>
+      <label for="page" class="label">
+        Page&nbsp;
+        <input type="radio" id="page" formControlName="pageOrManuscript" value="page"/>
+      </label>
+      <label for="manuscript" class="label">
+        Manuscript&nbsp;
+        <input type="radio" id="manuscript" formControlName="pageOrManuscript" value="manuscript"/>
+      </label>
+    </fieldset>
+  </section>
+
+  <section *ngIf="selectOrUpload === 'select' && pageOrManuscript === 'page'">
+    <div class="control field">
+      <label for="pageSubmit" class="label">Select a Page:</label>
+      <div class="select">
+        <select required name="submission" id="pageSubmit" formControlName="pageSelect">
+          <option *ngFor="let page of pages" value="{{page}}">{{page}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="control">
+      <button [disabled]="!optionsForm.controls.pageSelect.valid" class="button" type="submit">Submit</button>
+    </div>
+  </section>
+
+  <section *ngIf="selectOrUpload === 'select' && pageOrManuscript === 'manuscript'">
+    <div class="control field">
+      <label for="manuscriptSubmit" class="label">Select a Manuscript:</label>
+      <div class="select">
+        <select required name="submission" id="manuscriptSubmit" formControlName="manuscriptSelect">
+          <option value="Salzinnes">Salzinnes Antiphonal</option>
+        </select>
+      </div>
+    </div>
+    <div class="control">
+      <button [disabled]="!optionsForm.controls.manuscriptSelect.valid" class="button" type="submit">Submit</button>
+    </div>
+  </section>
+
+  <section *ngIf="selectOrUpload === 'upload'">
+    <fieldset class="control field">
+      <legend class="legend">Upload a Page or a Manifest?</legend>
+      <label class="label">
+        Page&nbsp;
+        <input type="radio" id="page" formControlName="pageOrManifest" value="page"/>
+      </label>
+      <label class="label">
+        Manifest&nbsp;
+        <input type="radio" id="manifest" formControlName="pageOrManifest" value="manifest"/>
+      </label>
+    </fieldset>
+  </section>
+
+  <section *ngIf="selectOrUpload === 'upload' && pageOrManifest === 'page'">
+    <div class="control field">
+      <label for="meiUpload" class="label">Select an MEI Neume File:</label>
+      <div class="select">
+        <input required type="file" formControlName="meiUpload" accept="application/xml, application/x-mei" id="meiUpload">
+      </div>
+      <label for="bgUpload" class="label">Select a Background Image:</label>
+      <div class="select">
+        <input required type="file" formControlName="bgUpload" accept="image/png, image/jpeg" id="bgUpload">
+      </div>
+    </div>
+    <div class="control">
+      <button [disabled]="!optionsForm.controls.meiUpload.valid && !optionsForm.controls.bgUpload.valid" class="button" type="submit">Submit</button>
+    </div>
+  </section>
+
+  <section *ngIf="selectOrUpload === 'upload' && pageOrManifest === 'manifest'">
+    <div class="control field">
+      <label for="manifestUpload" class="label">Select a Manifest to Upload:</label>
+      <div class="select">
+        <input required type="file" formControlName="manifestUpload" accept="application/json, application/ld+json" id="manifestUpload">
+      </div>
+    </div>
+    <div class="control">
+      <button [disabled]="!optionsForm.controls.manifestUpload.valid" class="button" type="submit">Submit</button>
+    </div>
+  </section>
+</form>

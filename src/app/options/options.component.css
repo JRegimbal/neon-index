@@ -1,0 +1,19 @@
+form {
+    grid-column: 2;
+}
+
+section {
+    padding: 1rem;
+}
+
+legend {
+    font-weight: bold;
+}
+
+label {
+    font-weight: normal;
+}
+
+.ng-invalid:not(form) {
+    border-left: 5px solid #a94442;
+}
