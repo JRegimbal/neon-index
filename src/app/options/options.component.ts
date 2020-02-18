@@ -16,20 +16,10 @@ function makeParams(obj: object): string {
   styleUrls: ['./options.component.css']
 })
 export class OptionsComponent implements OnInit {
-  optionsForm = new FormGroup({
-    selectOrUpload: new FormControl(''),
-    pageOrManuscript: new FormControl(''),
-    pageOrManifest: new FormControl(''),
-    pageSelect: new FormControl(''),
-    manuscriptSelect: new FormControl(''),
-    meiUpload: new FormControl(),
-    bgUpload: new FormControl(),
-    manifestUpload: new FormControl()
-  });
-
   selectOrUpload: string = '';
   pageOrManuscript: string = '';
   pageOrManifest: string = '';
+  pageSelect: string = '';
 
   formGroup1 = new FormGroup({
     selectOrUpload: new FormControl(this.selectOrUpload,
@@ -39,14 +29,38 @@ export class OptionsComponent implements OnInit {
   formGroup2 = new FormGroup({
     pageOrManuscript: new FormControl(this.pageOrManuscript,
       Validators.required)
-  })
+  });
 
+  formGroup3_1 = new FormGroup({
+    pageSelect: new FormControl(this.pageSelect,
+      Validators.required)
+  });
+
+  formGroup3_2 = new FormGroup({
+    manuscriptSelect: new FormControl('',
+      Validators.required)
+  });
+
+  formGroup3_3 = new FormGroup({
+    meiUpload: new FormControl('',
+      Validators.required),
+    bgUpload: new FormControl('',
+      Validators.required)
+  });
+
+  formGroup3_4 = new FormGroup({
+    manifestUpload: new FormControl('',
+      Validators.required)
+  });
+
+  pagesOrig: string[];
   pages: string[];
   pagesLength: number;
 
   constructor() { }
 
   ngOnInit() {
+    this.pagesOrig = pages;
     this.pages = pages;
     this.pagesLength = this.pages.length;
     getAllDocuments().then(response => {
@@ -54,60 +68,52 @@ export class OptionsComponent implements OnInit {
         this.pages.push(doc.key);
       }
     });
-    this.optionsForm.controls['selectOrUpload'].valueChanges
-      .subscribe(change => { this.selectOrUpload = change; });
-    this.optionsForm.controls['pageOrManuscript'].valueChanges
-      .subscribe(change => { this.pageOrManuscript = change; });
-    this.optionsForm.controls['pageOrManifest'].valueChanges
-      .subscribe(change => {
-          this.pageOrManifest = change;
-          this.optionsForm.controls.meiUpload.reset();
-          this.optionsForm.controls.bgUpload.reset();
-          this.optionsForm.controls.manifestUpload.reset();
-      });
   }
 
-  handleSubmit() {
-    const controls = this.optionsForm.controls;
-    if (controls.selectOrUpload.value === 'select') {
-      if (controls.pageOrManuscript.value === 'page') {
-        // Select a page
-        let params;
-        if (this.pages.indexOf(controls.pageSelect.value) >= this.pagesLength) {
-          params = makeParams({ storage: controls.pageSelect.value });
+  handleSubmit(e) {
+    console.debug("Submit");
+    console.debug(e);
+    let params;
+    switch (e) {
+      case "formGroup3_1":
+        let value = this.formGroup3_1.controls.pageSelect.value;
+        if (this.pagesOrig.includes(value)) {
+          params = makeParams({ storage: value });
         }
         else {
-          params = makeParams({ manifest: controls.pageSelect.value });
+          params = makeParams({ manifest: value });
         }
-        window.location.href = './editor.html?' + params;
-      }
-      else if (controls.pageOrManuscript.value === 'manuscript') {
-        let params = makeParams({ manifest: controls.manuscriptSelect.value });
-        window.location.href = './editor.html?' + params;
-      }
-    }
-    else if (controls.selectOrUpload.value === 'upload') {
-      if (controls.pageOrManifest.value === 'page') {
-        let mei: File = (document.getElementById('meiUpload') as HTMLInputElement).files[0];
-        let bg: File = (document.getElementById('bgUpload') as HTMLInputElement).files[0];
+        window.location.href = "./editor.html?" + params;
+        break;
+      case "formGroup3_2":
+        params = makeParams({
+          manifest: this.formGroup3_2.controls.manuscriptSelect.value
+        });
+        window.location.href = "./editor.html?" + params;
+        break;
+      case "formGroup3_3":
+        let mei: File = (document.getElementById("meiUpload") as HTMLInputElement).files[0];
+        let bg: File = (document.getElementById("bgUpload") as HTMLInputElement).files[0];
         createManifest(mei, bg).then(manifest => {
-          const manifestBlob = new Blob([JSON.stringify(manifest, null, 2)], {type: 'application/ld+json'});
+          const manifestBlob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/ld+json' });
           return addEntry(mei.name, manifestBlob);
-        }).then(() => {
+        }).then(_ => {
           window.location.reload();
-          // TODO do something else here
         }).catch(err => {
           console.error(err);
         });
-      }
-      else if (controls.pageOrManifest.value === 'manifest') {
-        let manifest = (document.getElementById('manifestUpload') as HTMLInputElement).files[0];
+        break;
+      case "formGroup3_4":
+        let manifest: File = (document.getElementById("manifestUpload") as HTMLInputElement).files[0];
         addEntry(manifest.name, manifest).then(_ => {
           window.location.reload();
         }).catch(err => {
           console.error(err);
         });
-      }
+        break;
+      default:
+        console.error("Unexpected ID: " + e);
+        break;
     }
   }
 
