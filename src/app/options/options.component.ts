@@ -53,19 +53,35 @@ export class OptionsComponent implements OnInit {
       Validators.required)
   });
 
+  formGroup3_5 = new FormGroup({
+    selection: new FormControl('',
+      Validators.required)
+  });
+
+  formGroup3_6 = new FormGroup({
+    selection: new FormControl('',
+      Validators.required)
+  });
+
+  addedPages: string[] = [];
+  addedManuscripts: string[] = [];
   pagesOrig: string[];
   pages: string[];
-  pagesLength: number;
 
   constructor() { }
 
   ngOnInit() {
     this.pagesOrig = pages;
     this.pages = pages;
-    this.pagesLength = this.pages.length;
     getAllDocuments().then(response => {
       for (const doc of response['rows']) {
-        this.pages.push(doc.key);
+        if (doc.doc.kind === "page") {
+          this.addedPages.push(doc.key);
+        }
+        else {
+          this.addedManuscripts.push(doc.key);
+        }
+        console.debug(doc);
       }
     });
   }
@@ -77,12 +93,7 @@ export class OptionsComponent implements OnInit {
     switch (e) {
       case "formGroup3_1":
         let value = this.formGroup3_1.controls.pageSelect.value;
-        if (this.pagesOrig.includes(value)) {
-          params = makeParams({ storage: value });
-        }
-        else {
-          params = makeParams({ manifest: value });
-        }
+        params = makeParams({ manifest: value });
         window.location.href = "./editor.html?" + params;
         break;
       case "formGroup3_2":
@@ -96,7 +107,7 @@ export class OptionsComponent implements OnInit {
         let bg: File = (document.getElementById("bgUpload") as HTMLInputElement).files[0];
         createManifest(mei, bg).then(manifest => {
           const manifestBlob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/ld+json' });
-          return addEntry(mei.name, manifestBlob);
+          return addEntry(mei.name, manifestBlob, true);
         }).then(_ => {
           window.location.reload();
         }).catch(err => {
@@ -105,11 +116,17 @@ export class OptionsComponent implements OnInit {
         break;
       case "formGroup3_4":
         let manifest: File = (document.getElementById("manifestUpload") as HTMLInputElement).files[0];
-        addEntry(manifest.name, manifest).then(_ => {
+        addEntry(manifest.name, manifest, false).then(_ => {
           window.location.reload();
         }).catch(err => {
           console.error(err);
         });
+        break;
+      case "formGroup3_5":
+      case "formGroup3_6":
+        let selection = this[e].controls.selection.value;
+        params = makeParams({ storage: selection });
+        window.location.href = "./editor.html?" + params;
         break;
       default:
         console.error("Unexpected ID: " + e);

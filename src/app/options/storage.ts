@@ -4,7 +4,7 @@ const db = new PouchDB('Neon-User-Storage');
 
 export function getAllDocuments() {
   return new Promise((resolve, reject) => {
-    db.allDocs().then(result => { resolve(result); })
+    db.allDocs({ include_docs: true }).then(result => { resolve(result); })
       .catch(err => { reject(err); });
   });
 }
@@ -52,10 +52,11 @@ export function createManifest(mei: File, bg: File) {
   });
 }
 
-export function addEntry(title: string, content: Blob): Promise<boolean> {
+export function addEntry(title: string, content: Blob, single: boolean): Promise<boolean> {
   return new Promise((resolve, reject) => {
     db.put({
       _id: title,
+      kind: single ? "page" : "manuscript",
       _attachments: {
         manifest: {
           content_type: 'application/ld+json',

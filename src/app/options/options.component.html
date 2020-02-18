@@ -2,11 +2,14 @@
     <mat-step [stepControl]="formGroup1" label="Select an Option">
         <form [formGroup]="formGroup1">
             <fieldset class="control field">
-                <label for="select" class="label">Select an Existing Document:&nbsp;
+                <label for="select" class="label">Select a Sample Document:&nbsp;
                     <input [(ngModel)]="selectOrUpload" type="radio" id="select" formControlName="selectOrUpload" value="select"/>
                 </label>
                 <label for="upload" class="label">Upload a New Document:&nbsp;
                     <input [(ngModel)]="selectOrUpload" type="radio" id="upload" formControlName="selectOrUpload" value="upload"/>
+                </label>
+                <label for="uploaded" class="label">Select an Uploaded Document:&nbsp;
+                  <input [(ngModel)]="selectOrUpload" type="radio" id="uploaded" formControlName="selectOrUpload" value="uploaded"/>
                 </label>
             </fieldset>
             <div>
@@ -94,6 +97,38 @@
         <div>
           <button mat-raised-button matStepperPrevious type="button">Previous</button>
           <button mat-raised-button [disabled]="!formGroup3_4.valid" type="submit">Submit</button>
+        </div>
+      </form>
+
+      <form *ngIf="selectOrUpload === 'uploaded' && pageOrManuscript === 'page'"
+        id="formGroup3_5" [formGroup]="formGroup3_5" (ngSubmit)="handleSubmit($event.target.id)">
+        <div class="control field">
+          <label for="pageSubmit" class="label">Select a Page:</label>
+          <div class="select">
+            <select id="pageSubmit" formControlName="selection">
+              <option *ngFor="let page of addedPages" value="{{page}}">{{page}}</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <button mat-raised-button matStepperPrevious type="button">Previous</button>
+          <button mat-raised-button [disabled]="!formGroup3_5.valid" type="submit">Submit</button>
+        </div>
+      </form>
+
+      <form *ngIf="selectOrUpload === 'uploaded' && pageOrManuscript === 'manuscript'"
+        id="formGroup3_6" [formGroup]="formGroup3_6" (ngSubmit)="handleSubmit($event.target.id)">
+        <div class="control field">
+          <label for="manuscriptSubmit" class="label">Select a Manuscript:</label>
+          <div class="select">
+            <select id="manuscriptSubmit" formControlName="selection">
+              <option *ngFor="let manuscript of addedManuscripts" value="{{manuscript}}">{{manuscript}}</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <button mat-raised-button matStepperPrevious type="button">Previous</button>
+          <button mat-raised-button [disabled]="!formGroup3_6.valid" type="submit">Submit</button>
         </div>
       </form>
     </mat-step>
