@@ -5,10 +5,10 @@
                 <label for="select" class="label">Select a Sample Document:&nbsp;
                     <input [(ngModel)]="selectOrUpload" type="radio" id="select" formControlName="selectOrUpload" value="select"/>
                 </label>
-                <label for="upload" class="label">Upload a New Document:&nbsp;
+                <label for="upload" class="label">Load a New Document:&nbsp;
                     <input [(ngModel)]="selectOrUpload" type="radio" id="upload" formControlName="selectOrUpload" value="upload"/>
                 </label>
-                <label for="uploaded" class="label">Select an Uploaded Document:&nbsp;
+                <label for="uploaded" class="label">Select a User-Provided Document:&nbsp;
                   <input [(ngModel)]="selectOrUpload" type="radio" id="uploaded" formControlName="selectOrUpload" value="uploaded"/>
                 </label>
             </fieldset>
@@ -89,7 +89,7 @@
       <form *ngIf="selectOrUpload === 'upload' && pageOrManuscript === 'manuscript'"
         id="formGroup3_4" [formGroup]="formGroup3_4" (ngSubmit)="handleSubmit($event.target.id)">
         <div class="control field">
-          <label for="manifestUpload" class="label">Select a Manifest to Upload:</label>
+          <label for="manifestUpload" class="label">Select a Manifest to Load:</label>
           <div class="select">
             <input type="file" formControlName="manifestUpload" accept="application/ld+json, application/json" id="manifestUpload">
           </div>
