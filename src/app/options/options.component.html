@@ -42,6 +42,7 @@
           <label for="pageSubmit" class="label">Select a Page:</label>
           <div class="select">
             <select name="submission" id="pageSubmit" formControlName="pageSelect">
+              <option disabled selected value>-- select a page--</option>
               <option *ngFor="let page of pages" value="{{page}}">{{page}}</option>
             </select>
           </div>
@@ -58,6 +59,7 @@
         <div class="control field">
           <div class="select">
             <select name="submission" id="pageSubmit" formControlName="manuscriptSelect">
+              <option disabled selected value>-- select a manuscript --</option>
               <option value="Salzinnes">Salzinnes Antiphonal</option>
             </select>
           </div>
@@ -106,6 +108,7 @@
           <label for="pageSubmit" class="label">Select a Page:</label>
           <div class="select">
             <select id="pageSubmit" formControlName="selection">
+              <option disabled selected value>-- select a page --</option>
               <option *ngFor="let page of addedPages" value="{{page}}">{{page}}</option>
             </select>
           </div>
@@ -122,6 +125,7 @@
           <label for="manuscriptSubmit" class="label">Select a Manuscript:</label>
           <div class="select">
             <select id="manuscriptSubmit" formControlName="selection">
+              <option disabled selected value>-- select a manuscript --</option>
               <option *ngFor="let manuscript of addedManuscripts" value="{{manuscript}}">{{manuscript}}</option>
             </select>
           </div>
